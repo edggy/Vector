@@ -6,6 +6,18 @@ class Vector:
     def __init__(self, *vec):
         self._val = list(vec)
         
+    @property
+    def x(self):
+        return self._val[0]
+    
+    @property
+    def y(self):
+        return self._val[1]    
+    
+    @property
+    def z(self):
+        return self._val[2]     
+        
     def __str__(self):
         return str(self._val)
     
@@ -95,7 +107,7 @@ object.__rmod__(self, other)
 object.__rdivmod__(self, other)
 object.__rpow__(self, other)
 object.__rlshift__(self, other)
-object.__rrshift__(self, other)¶
+object.__rrshift__(self, other)
 object.__rand__(self, other)
 object.__rxor__(self, other)
 object.__ror__(self, other)
