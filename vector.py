@@ -153,10 +153,25 @@ object.__ror__(self, other)
     def __reversed__(self):
         return Static_Iter(self._val, step = -1)
     
+    def __copy__(self):
+        clone = type(self)(*copy.copy(self._val))
+    
+    def __deepcopy__(self, memo):  
+        clone = type(self)(*copy.deepcopy(self._val))    
+    
     def length2(self):
         return self*self
-        
+    
 
+class I(Vector):
+    def __init__(self, index, length, value = 1):
+        self._val = [0] * length
+        self._val[index] = value    
+        
+class O(Vector):
+    def __init__(self, length):
+        self._val = [0] * length
+        
 class Static_Iter:
     def __init__(self, tup, start = 0, end = None, step = 1):
         if end is None:
