@@ -19,10 +19,10 @@ class Vector:
         return self._val[2]     
         
     def __str__(self):
-        return str(self._val)
+        return '<%s>' % (','.join(map(str, self._val))) 
     
     def __repr__(self):
-        return repr(self._val)   
+        return '<%s>' % (','.join(map(repr, self._val))) 
     
     def __hash__(self):
         return hash(tuple(self._val))
@@ -114,14 +114,20 @@ object.__ror__(self, other)
     '''
     
     def __eq__(self, other):
-        for (i,j) in zip(self._val, other):
-            if i != j: return False
-        return True
+        try:
+            for (i,j) in zip(self._val, other):
+                if i != j: return False
+            return True
+        except (TypeError, AttributeError):
+            return False
     
     def __ne__(self, other):
-        for (i,j) in zip(self._val, other):
-            if i != j: return True
-        return False   
+        try:
+            for (i,j) in zip(self._val, other):
+                if i != j: return True
+            return False   
+        except (TypeError, AttributeError):
+            return True        
     
     def __gt__(self, other):
         return self.length2() > Vector(other).length2()
