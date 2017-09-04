@@ -3,8 +3,15 @@ import copy
 import operator
 
 class Vector:
-    def __init__(self, *vec):
-        self._val = list(vec)
+    def __init__(self, *vec, **kwargs):
+        if 'noExpand' not in kwargs or not kwargs['noExpand']:
+            try:
+                self._val = list(*vec)
+            except TypeError:
+                kwargs['noExpand'] = True
+        
+        if 'noExpand' in kwargs and kwargs['noExpand']:
+            self._val = list(vec)
         
     @property
     def x(self):
@@ -90,12 +97,19 @@ class Vector:
         pass 
     def __rshift__(self, other):
         pass
-    def __and__(self, other): return self._op_(operator.and_, other)
-    def __xor__(self, other): return self._op_(operator.xor_, other)
-    def __or__(self, other): return self._op_(operator.or_, other)     
+    def __and__(self, other): return self.__op__(operator.and_, other)
+    def __xor__(self, other): return self.__op__(operator.xor_, other)
+    def __or__(self, other): return self.__op__(operator.or_, other)     
     
-    def __div__(self, other): return self._op_(operator.div, other)
-    def __truediv__(self, other): return self._op_(operator.truediv, other)
+    def __div__(self, other):
+        try:
+            return sum(self.__op__(operator.div, other))
+        except TypeError:
+            pass
+        
+        return self.__op__(operator.div, (other,) * len(self))    
+    
+    def __truediv__(self, other): return self.__op__(operator.truediv, other)
     
     '''
 object.__rsub__(self, other)
@@ -200,6 +214,7 @@ class Static_Iter:
 if __name__ == '__main__':  
     v1 = Vector(1,2)
     v2 = Vector(3,4)
+    v3 = Vector(-1,7)
     
     print v1 + v2
     print v1 + (5,1)
@@ -223,4 +238,18 @@ if __name__ == '__main__':
     
     print Vector(1,2,3)**2
     
+    print Vector(v1)
+    print Vector(v1, noExpand = True)
     
+    mat1 = Vector(v1, v2)
+    
+    mat2 = Vector(v3, v1)
+    
+    
+    print mat1
+    print mat2
+    print mat1+mat2
+    
+    #print mat1*mat2
+    
+    #print sum((v1*v3, v2*v1))
